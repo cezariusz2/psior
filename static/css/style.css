@@ -1,0 +1,18 @@
+h1 {
+    border: 2px #222 solid;
+    color: darkgoldenrod;
+    text-align: center;
+    padding: 10px;
+}
+.img-preview{
+    width:200px;
+    height:auto;
+}
+br{
+    width:100%;
+    height:1px;
+    color: black;
+}
+.filename{
+    font-size: 2em;
+}

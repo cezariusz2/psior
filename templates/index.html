@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <title>Projekt1 PSOIR</title>
+</head>
+<body>
+    <h1>Projekt1 PSOIR</h1>
+    <div class="container">
+        <form method="post" name="ch">
+            <input type="submit" name="uploadimg", value="Choose files">
+            {%for i in range(0, len)%}
+            <p class="filename">{{filenames[i]}}</p>
+            <img src="{{files[i]}}" alt="error" class="img-preview">
+            <input type="checkbox" value={{filenames[i]}} name ="imgselect">
+            <br>
+            <hr>
+            {%endfor%}
+            <h4>Upload new file</h4>
+        </form>
+        <form method=post enctype=multipart/form-data>
+            <input type=file name=file>
+            <input type=submit name="uploadimg" value= "Upload new file">
+          </form>
+    </div>
+</body>
+</html>
