@@ -2,8 +2,8 @@ from flask import Flask, render_template, request
 import boto3
 import io
 import base64
-
 from werkzeug.utils import redirect, secure_filename
+
 app = Flask(__name__)
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
@@ -60,7 +60,7 @@ def sent_to_sqs(lista):
     c = boto3.client('sqs', region_name='us-east-1')
     for filename in lista:
         response2 = c.send_message(
-            QueueUrl="https://sqs.us-east-1.amazonaws.com/716899022626/sqs-215841-1",
+            QueueUrl="https://sqs.us-east-1.amazonaws.com/716899022626/sqs215841-1",
             MessageBody=filename)
     return True
 
