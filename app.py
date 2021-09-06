@@ -36,10 +36,6 @@ def index():
     return render_template('index.html', len=len(images), files=images, filenames=imgNames)
 
 
-def upload_img():
-    print("przeslij plik")
-
-
 def sent_to_sqs(lista):
     if len(lista) <= 0:
         return False
