@@ -1,11 +1,7 @@
-import base64
 import io
 import boto3
 import time
-import json
-#import matplotlib.pyplot as plt
-#import matplotlib.image as mpimg
-import numpy as np
+
 from PIL import Image, ImageOps
 
 s3 = boto3.client('s3')
@@ -39,12 +35,14 @@ def main_loop():
             img = process_image(img,filename),
             send_image(img, filename)
         except Exception:
+            print('ERROR')
             continue
         finally:
-            sqs.delete_message(
+            res = sqs.delete_message(
                 QueueUrl=url,
                 ReceiptHandle=receiptHandle
             )
+            print(res)
         time.sleep(10)
         print("Wiadomosc odebrana i usunieta")
 
