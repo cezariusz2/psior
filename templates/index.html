@@ -11,6 +11,18 @@
         function(data) {
             console.log(data);
             let file = document.querySelector("#image").files[0];
+            if (file) {
+                let name = file.name
+                let formats = ['png', 'jpg', 'jpeg']
+                let ext = name.split('.').slice(-1)[0];
+                if (!formats.includes(ext)) {
+                    alert("Nie wybrano poprawnego pliku");
+                    continue;
+                } 
+            }
+            else{
+                continue;
+            }
             url = data.url;
             console.log(url);
             response = data;
@@ -38,7 +50,8 @@
                     }, 3000);
                 },
                 error: function (jqXHR, textStatus, errorThrown) {
-                    alert(jqXHR.responseText);
+                    console.log(jqXHR.responseText)
+                    //alert(jqXHR.responseText);
                 }
             });
         
