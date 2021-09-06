@@ -1,28 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <title>Projekt1 PSOIR</title>
+    <script type=text/javascript>
+     $(function() { $("#mybutton").click(function (event) { $.getJSON('/generate_url', { filename: document.querySelector("#image").files[0].name },
+        function(data) {
+            console.log(data);
+            let file = document.querySelector("#image").files[0];
+            url = data.url;
+            console.log(url);
+            response = data;
+            fields = data.fields;
+            const fd = new FormData();
+            for (const key in fields) {
+                fd.append(key, fields[key]);
+            }
+            fd.append('file', file);
+            console.log(fd);
+        
+            $.ajax({
+                xhr: function () {
+                    var xhr = new window.XMLHttpRequest();
+                    return xhr;
+                },
+                type: 'POST',
+                url: response.url,
+                data: fd,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    setTimeout(() => {
+                        container.remove();
+                    }, 3000);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    alert(jqXHR.responseText);
+                }
+            });
+        
+        }); return false; }); }); </script>
 </head>
+
 <body>
     <h1>Projekt1 PSOIR</h1>
     <div class="container">
         <form method="post" name="ch">
-            <input type="submit" name="uploadimg", value="Choose files">
+            <input type="submit" name="uploadimg" , value="Choose files">
             {%for i in range(0, len)%}
             <p class="filename">{{filenames[i]}}</p>
             <img src="{{files[i]}}" alt="error" class="img-preview">
-            <input type="checkbox" value={{filenames[i]}} name ="imgselect">
+            <input type="checkbox" value={{filenames[i]}} name="imgselect">
             <br>
             <hr>
             {%endfor%}
             <h4>Upload new file</h4>
         </form>
         <form method=post enctype=multipart/form-data>
-            <input type=file name=file>
-            <input type=submit name="uploadimg" value= "Upload new file">
-          </form>
+            <input id='image' type=file name=file>
+            <!-- <input id='submit-button' type=submit name="uploadimg" value="Upload new file"> -->
+        </form>
+        <br></br>
+        <button type="button" , id='mybutton' , value="sendImage">Wyślij do s3</button>
+        <!-- <button id='send'>Wyślij na s3</button> -->
     </div>
+
 </body>
+
 </html>

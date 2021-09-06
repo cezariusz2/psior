@@ -34,14 +34,17 @@ def main_loop():
             continue
         filename = messages[0]['Body']
         print(filename)
-        img = fetch_image(filename)
-        img = process_image(img,filename),
-        send_image(img, filename)
-        
-        sqs.delete_message(
-            QueueUrl=url,
-            ReceiptHandle=receiptHandle
-        )
+        try:
+            img = fetch_image(filename)
+            img = process_image(img,filename),
+            send_image(img, filename)
+        except Exception:
+            continue
+        finally:
+            sqs.delete_message(
+                QueueUrl=url,
+                ReceiptHandle=receiptHandle
+            )
         time.sleep(10)
         print("Wiadomosc odebrana i usunieta")
 

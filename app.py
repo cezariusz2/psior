@@ -1,3 +1,4 @@
+from botocore.exceptions import ClientError
 from flask import Flask, render_template, request
 import boto3
 import io
@@ -5,7 +6,6 @@ import base64
 from werkzeug.utils import redirect, secure_filename
 
 app = Flask(__name__)
-
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 bucket_name = 'bucket215841-1'
 
@@ -28,25 +28,11 @@ def index():
         images.append(img1)
         imgNames.append(f.key)
     if request.method == 'POST':
-        if request.form['uploadimg'] == 'Upload new file':
-
-            if 'file' not in request.files:
-                print("1")
-                pass
-            file = request.files['file']
-            if file.filename == '':
-                print("2")
-            if file and allowed_file(file.filename):
-                upload_img()
-                filename = secure_filename(file.filename)
-                bucket.put_object(Key=filename, Body=file)
-                
-        else:
-            print("---pliki do zmiany---")
-            file_list = request.form.getlist('imgselect')
-            print(file_list)
-            if sent_to_sqs(file_list):
-                redirect('/')
+        print("---pliki do zmiany---")
+        file_list = request.form.getlist('imgselect')
+        print(file_list)
+        if sent_to_sqs(file_list):
+            redirect('/')
     return render_template('index.html', len=len(images), files=images, filenames=imgNames)
 
 
@@ -64,11 +50,24 @@ def sent_to_sqs(lista):
             MessageBody=filename)
     return True
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-
+@app.route("/generate_url", methods=['POST', 'PUT','GET'])
+def create_presigned_post():
+    object_name = request.args.get('filename')
+    print('Generowanie url dla:')
+    print(object_name)
+    s3 = boto3.client('s3')
+    try:
+        response = s3.generate_presigned_post(bucket_name,
+                                                     object_name,
+                                                     Fields=None,
+                                                     Conditions=None,
+                                                     ExpiresIn=3600)
+        
+    except ClientError as e:
+        print(e)
+        return None
+    return response
 if __name__ == "__main__":
     app.debug = True
     app.run(host='0.0.0.0')
