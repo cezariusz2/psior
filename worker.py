@@ -43,7 +43,7 @@ def main_loop():
                 ReceiptHandle=receiptHandle
             )
             print(res)
-        time.sleep(10)
+        #time.sleep(10)
         print("Wiadomosc odebrana i usunieta")
 
 def send_image(file, filename):
