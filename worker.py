@@ -26,7 +26,7 @@ def main_loop():
 
         except Exception:
             print("Brak wiadomości...")
-            time.sleep(10)
+#           time.sleep(10)
             continue
         filename = messages[0]['Body']
         print(filename)
